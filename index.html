@@ -67,13 +67,14 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(26,26,26,0.
 .btn-outline{display:inline-block;padding:12px 28px;background:transparent;border:1px solid var(--border);color:var(--white);font-family:var(--font-body);font-size:11px;font-weight:400;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;transition:all 0.15s;text-decoration:none}
 .btn-outline:hover{border-color:var(--accent);color:var(--accent)}
 .panel-grid{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
-.panel-item{cursor:pointer;padding:1.8rem 2.5rem;border-right:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:2rem;transition:background 0.15s;background:var(--bg2)}
-.panel-item:last-child{border-right:none}
-.panel-item:hover{background:var(--bg3)}
-.panel-title{font-family:var(--font-head);font-size:0.9rem;font-weight:700;color:var(--white);text-transform:uppercase;letter-spacing:-0.01em;margin-bottom:0.25rem}
+.panel-item{cursor:pointer;padding:2rem 2.5rem;border-right:1px solid var(--border);border-left:3px solid transparent;display:flex;align-items:center;justify-content:space-between;gap:2rem;transition:all 0.2s;background:var(--bg2)}
+.panel-item:first-child{border-left-color:var(--accent)}
+.panel-item:last-child{border-right:none;border-left-color:var(--border)}
+.panel-item:hover{background:var(--bg3);border-left-color:var(--accent)}
+.panel-title{font-family:var(--font-head);font-size:0.95rem;font-weight:700;color:var(--white);text-transform:uppercase;letter-spacing:-0.01em;margin-bottom:0.3rem}
 .panel-sub{font-family:var(--font-body);font-size:12px;color:var(--muted)}
-.panel-link{font-family:var(--font-body);font-size:10px;font-weight:500;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);display:inline-flex;align-items:center;gap:6px;transition:all 0.2s;flex-shrink:0}
-.panel-item:hover .panel-link{color:var(--accent);gap:10px}.panel-link::after{content:'\2192'}
+.panel-link{font-family:var(--font-body);font-size:10px;font-weight:500;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);display:inline-flex;align-items:center;gap:6px;transition:all 0.2s;flex-shrink:0;border-bottom:1px solid rgba(153,242,209,0.3);padding-bottom:1px}
+.panel-item:hover .panel-link{gap:10px}.panel-link::after{content:'\2192'}
 .split{display:grid;grid-template-columns:1fr 1fr;min-height:55vh}
 .split-img{overflow:hidden;position:relative}.split-img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.6s}
 .split:hover .split-img img{transform:scale(1.025)}
@@ -582,7 +583,7 @@ function makeCard(v,source='stock'){
   const img=v.imgs&&v.imgs[0]?`<img src="${v.imgs[0]}" alt="${v.make} ${v.model}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=no-img>No Image</div>'">`:`<div class="no-img">No Image</div>`;
   const badge=v.badge?`<div class="stock-badge badge-tag">${v.badge}</div>`:v.sold?`<div class="stock-badge badge-sold-tag">SOLD</div>`:'';
   const price=v.sold?`<div class="stock-price">Sold</div>`:`<div class="stock-price">${fmt(v.price)}${v.priceNote?`<span style="font-size:0.65em;font-weight:300;margin-left:4px">${v.priceNote}</span>`:''}</div>`;
-  return`<div class="stock-card" onclick="openDetail(${JSON.stringify(v.id)},'${source}')"><div class="stock-card-img">${badge}${img}</div><div class="stock-card-body"><div class="stock-year">${v.year}</div><div class="stock-make">${v.make}</div><div class="stock-model">${v.model}</div><div class="stock-specs"><span class="stock-spec">${Number(v.mileage).toLocaleString()} miles</span><span class="stock-spec">${v.transmission}</span><span class="stock-spec">${v.fuel}</span><span class="stock-spec">${v.colour}</span></div><div class="stock-footer">${price}<span class="stock-details">Full Details</span></div></div></div>`;
+  return`<div class="stock-card" onclick="openDetail('${String(v.id).replace(/'/g,\"\\'\")}','${source}')"><div class="stock-card-img">${badge}${img}</div><div class="stock-card-body"><div class="stock-year">${v.year}</div><div class="stock-make">${v.make}</div><div class="stock-model">${v.model}</div><div class="stock-specs"><span class="stock-spec">${Number(v.mileage).toLocaleString()} miles</span><span class="stock-spec">${v.transmission}</span><span class="stock-spec">${v.fuel}</span><span class="stock-spec">${v.colour}</span></div><div class="stock-footer">${price}<span class="stock-details">Full Details</span></div></div></div>`;
 }
 function renderStock(data,id,source='stock'){const g=document.getElementById(id);if(!g)return;g.innerHTML=data.length?data.map(v=>makeCard(v,source)).join(''):`<div class="no-results"><p>No vehicles found.</p></div>`}
 
@@ -653,15 +654,25 @@ function parseFrontmatter(text){
 }
 
 function parseImages(text){
-  // Parse the images list from frontmatter
   const imgs = [];
-  const imgBlock = text.match(/^images:\n((?:- url:.*\n?)*)/m);
-  if(imgBlock){
-    const urls = imgBlock[1].match(/url:\s*(.+)/g);
-    if(urls) urls.forEach(u => {
-      const url = u.replace('url:','').trim().replace(/^["']|["']$/g,'');
-      if(url && url.startsWith('http')) imgs.push(url);
-    });
+  // Format 1: images:\n  - url: https://...
+  const urlMatches = text.matchAll(/- url:\s*["']?([^"'\n]+)["']?/g);
+  for(const m of urlMatches){ if(m[1] && m[1].trim()) imgs.push(m[1].trim()); }
+  // Format 2: images:\n  - https://...
+  if(!imgs.length){
+    const listMatches = text.matchAll(/images:[\s\S]*?(?=\n\w|$)/);
+    for(const block of listMatches){
+      const lines = block[0].split('\n').slice(1);
+      lines.forEach(l => {
+        const val = l.replace(/^\s*-\s*/,'').trim().replace(/^["']|["']$/g,'');
+        if(val.startsWith('http')) imgs.push(val);
+      });
+    }
+  }
+  // Format 3: single image field
+  if(!imgs.length){
+    const single = text.match(/^image:\s*["']?([^"'\n]+)["']?/m);
+    if(single && single[1].startsWith('http')) imgs.push(single[1].trim());
   }
   return imgs;
 }
