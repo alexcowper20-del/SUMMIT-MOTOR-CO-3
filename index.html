@@ -66,15 +66,13 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(26,26,26,0.
 .btn-fill:hover{background:transparent;color:var(--accent)}
 .btn-outline{display:inline-block;padding:12px 28px;background:transparent;border:1px solid var(--border);color:var(--white);font-family:var(--font-body);font-size:11px;font-weight:400;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;transition:all 0.15s;text-decoration:none}
 .btn-outline:hover{border-color:var(--accent);color:var(--accent)}
-.panel-grid{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--border)}
-.panel-item{position:relative;overflow:hidden;cursor:pointer;aspect-ratio:4/3;border-right:1px solid var(--border);border-bottom:1px solid var(--border)}
+.panel-grid{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.panel-item{cursor:pointer;padding:1.8rem 2.5rem;border-right:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:2rem;transition:background 0.15s;background:var(--bg2)}
 .panel-item:last-child{border-right:none}
-.panel-item img{width:100%;height:100%;object-fit:cover;transition:transform 0.6s ease;display:block}
-.panel-item:hover img{transform:scale(1.04)}
-.panel-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(26,26,26,0.85) 0%,rgba(26,26,26,0.1) 60%);display:flex;flex-direction:column;justify-content:flex-end;padding:2rem}
-.panel-title{font-family:var(--font-head);font-size:1.2rem;font-weight:700;color:var(--white);text-transform:uppercase;letter-spacing:-0.01em;margin-bottom:0.3rem}
-.panel-sub{font-family:var(--font-body);font-size:12px;color:rgba(255,255,255,0.45);margin-bottom:0.8rem}
-.panel-link{font-family:var(--font-body);font-size:10px;font-weight:500;letter-spacing:0.15em;text-transform:uppercase;color:var(--white);display:inline-flex;align-items:center;gap:6px;transition:all 0.2s}
+.panel-item:hover{background:var(--bg3)}
+.panel-title{font-family:var(--font-head);font-size:0.9rem;font-weight:700;color:var(--white);text-transform:uppercase;letter-spacing:-0.01em;margin-bottom:0.25rem}
+.panel-sub{font-family:var(--font-body);font-size:12px;color:var(--muted)}
+.panel-link{font-family:var(--font-body);font-size:10px;font-weight:500;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);display:inline-flex;align-items:center;gap:6px;transition:all 0.2s;flex-shrink:0}
 .panel-item:hover .panel-link{color:var(--accent);gap:10px}.panel-link::after{content:'\2192'}
 .split{display:grid;grid-template-columns:1fr 1fr;min-height:55vh}
 .split-img{overflow:hidden;position:relative}.split-img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.6s}
@@ -278,9 +276,18 @@ footer{background:var(--black);padding:4rem 2.5rem 2rem;border-top:1px solid var
       </div>
     </div>
   </div>
+  <div class="section section-mid" style="padding-top:3rem;padding-bottom:3rem">
+    <div class="container">
+      <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:2rem;flex-wrap:wrap;gap:1rem">
+        <div><span class="eyebrow">For Sale Now</span><h2 class="section-title">Featured Vehicles</h2></div>
+        <button class="btn btn-accent" onclick="showPage('stock')">View All Stock</button>
+      </div>
+      <div class="stock-grid" id="home-featured-grid"><div class="loading-state"><div class="spinner"></div><p>Loading vehicles...</p></div></div>
+    </div>
+  </div>
   <div class="panel-grid">
-    <div class="panel-item" onclick="showPage('stock')"><img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=1000&q=80" alt="Stock"/><div class="panel-overlay"><div class="panel-title">Current Stock</div><div class="panel-sub">Handpicked premium vehicles</div><span class="panel-link">View All</span></div></div>
-    <div class="panel-item" onclick="showPage('sell')"><img src="https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=1000&q=80" alt="Sell"/><div class="panel-overlay"><div class="panel-title">Sell Your Vehicle</div><div class="panel-sub">Fast, fair &amp; hassle-free</div><span class="panel-link">Find Out More</span></div></div>
+    <div class="panel-item" onclick="showPage('stock')"><div><div class="panel-title">Current Stock</div><div class="panel-sub">Browse our handpicked vehicles</div></div><span class="panel-link">View All</span></div>
+    <div class="panel-item" onclick="showPage('sell')"><div><div class="panel-title">Sell Your Vehicle</div><div class="panel-sub">Fast, fair &amp; hassle-free valuations</div></div><span class="panel-link">Find Out More</span></div>
   </div>
   <div class="split">
     <div class="split-img"><img src="https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=900&q=80" alt="Summit Motor Company"/></div>
@@ -290,15 +297,6 @@ footer{background:var(--black);padding:4rem 2.5rem 2rem;border-top:1px solid var
       <div class="divider accent"></div>
       <p class="section-body" style="margin-bottom:2rem">We believe buying and selling a vehicle should be a pleasure. Operating by appointment from Holmfirth, West Yorkshire, we give every customer our complete, undivided attention.</p>
       <button class="btn btn-accent" onclick="showPage('about')">About Us</button>
-    </div>
-  </div>
-  <div class="section section-mid">
-    <div class="container">
-      <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:2rem;flex-wrap:wrap;gap:1rem">
-        <div><span class="eyebrow">For Sale Now</span><h2 class="section-title">Featured Vehicles</h2></div>
-        <button class="btn btn-accent" onclick="showPage('stock')">View All Stock</button>
-      </div>
-      <div class="stock-grid" id="home-featured-grid"><div class="loading-state"><div class="spinner"></div><p>Loading vehicles...</p></div></div>
     </div>
   </div>
   <div class="quote-band">
@@ -634,57 +632,95 @@ if(window.netlifyIdentity){
   });
 }
 
-// ── GOOGLE SHEETS INTEGRATION ──
-const SHEET_CSV_URL='https://docs.google.com/spreadsheets/d/e/2PACX-1vTRjyeaW3OaEypcUUOPcAtJfD09812FWX7iObERYCb_C0XDffuv1f8QDOA0bBsq82ydqmNkYJH41ggQ/pub?gid=0&single=true&output=csv';
+// ── GITHUB _stock CMS LOADER ──
+const GITHUB_USER = 'alexcowper20-del';
+const GITHUB_REPO = 'SUMMIT-MOTOR-CO-3';
+const GITHUB_BRANCH = 'main';
+const STOCK_API = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/_stock?ref=${GITHUB_BRANCH}`;
 
-function parseCSV(text){
-  const lines=text.trim().split('\n');
-  const headers=lines[0].split(',').map(h=>h.trim().replace(/^"|"$/g,''));
-  return lines.slice(1).map(line=>{
-    const cols=[];let cur='',inQ=false;
-    for(let i=0;i<line.length;i++){const ch=line[i];if(ch==='"'){inQ=!inQ}else if(ch===','&&!inQ){cols.push(cur.trim());cur=''}else{cur+=ch}}
-    cols.push(cur.trim());
-    const row={};headers.forEach((h,i)=>{row[h]=(cols[i]||'').replace(/^"|"$/g,'').trim()});
-    return row;
-  }).filter(r=>r.id&&r.id!=='');
+function parseFrontmatter(text){
+  const match = text.match(/^---\n([\s\S]*?)\n---/);
+  if(!match) return {};
+  const fm = {};
+  match[1].split('\n').forEach(line => {
+    const sep = line.indexOf(':');
+    if(sep === -1) return;
+    const key = line.slice(0,sep).trim();
+    let val = line.slice(sep+1).trim().replace(/^["']|["']$/g,'');
+    fm[key] = val;
+  });
+  return fm;
 }
 
-function rowToVehicle(r){
-  const imgs=[];
-  ['img1','img2','img3','img4','img5','img6'].forEach(k=>{if(r[k]&&r[k].startsWith('http'))imgs.push(r[k])});
-  const rawPrice=(r.price||'0').replace(/[\u00a3,]/g,'').trim();
-  return{
-    id:r.id,make:r.make||'',model:r.model||'',variant:r.variant||'',
-    year:r.year||'',price:parseFloat(rawPrice)||0,priceNote:r.priceNote||'',
-    mileage:parseInt((r.mileage||'0').replace(/,/g,''))||0,
-    fuel:r.fuel||'',transmission:r.transmission||'',colour:r.colour||'',
-    engine:r.engine||'',co2:r.co2||'',roadTax:r.roadTax||'',
-    category:r.category||'',badge:r.badge||'',
-    sold:(r.sold||'').toString().toUpperCase()==='TRUE',
-    description:r.description||'',imgs:imgs
+function parseImages(text){
+  // Parse the images list from frontmatter
+  const imgs = [];
+  const imgBlock = text.match(/^images:\n((?:- url:.*\n?)*)/m);
+  if(imgBlock){
+    const urls = imgBlock[1].match(/url:\s*(.+)/g);
+    if(urls) urls.forEach(u => {
+      const url = u.replace('url:','').trim().replace(/^["']|["']$/g,'');
+      if(url && url.startsWith('http')) imgs.push(url);
+    });
+  }
+  return imgs;
+}
+
+function fmToVehicle(fm, imgs, id){
+  return {
+    id: fm.id || id,
+    make: fm.make || '',
+    model: fm.model || '',
+    variant: fm.variant || '',
+    year: fm.year || '',
+    price: parseFloat((fm.price||'0').toString().replace(/[^0-9.]/g,'')) || 0,
+    priceNote: fm.priceNote || '',
+    mileage: parseInt((fm.mileage||'0').toString().replace(/[^0-9]/g,'')) || 0,
+    fuel: fm.fuel || '',
+    transmission: fm.transmission || '',
+    colour: fm.colour || '',
+    engine: fm.engine || '',
+    co2: fm.co2 || '',
+    roadTax: fm.roadTax || '',
+    category: fm.category || '',
+    badge: fm.badge || '',
+    sold: fm.sold === 'true' || fm.sold === true,
+    description: fm.description || '',
+    imgs: imgs
   };
 }
 
 async function loadStock(){
   try{
-    const proxy='https://api.allorigins.win/raw?url='+encodeURIComponent(SHEET_CSV_URL);
-    const res=await fetch(proxy);
-    if(!res.ok)throw new Error('fetch failed');
-    const text=await res.text();
-    const rows=parseCSV(text);
-    const vehicles=rows.map(rowToVehicle);
-    STOCK=vehicles.filter(v=>!v.sold);
-    SOLD_STOCK=vehicles.filter(v=>v.sold);
-  }catch(err){
-    console.warn('Could not load from Google Sheets:',err.message);
-    STOCK=[];SOLD_STOCK=[];
+    const res = await fetch(STOCK_API);
+    if(!res.ok) throw new Error('GitHub API failed: ' + res.status);
+    const files = await res.json();
+    const mdFiles = files.filter(f => f.name.endsWith('.md'));
+    const vehicles = await Promise.all(mdFiles.map(async (f, i) => {
+      try {
+        const r = await fetch(f.download_url);
+        const text = await r.text();
+        const fm = parseFrontmatter(text);
+        const imgs = parseImages(text);
+        return fmToVehicle(fm, imgs, i+1);
+      } catch(e) {
+        console.warn('Could not parse', f.name, e);
+        return null;
+      }
+    }));
+    const valid = vehicles.filter(v => v && v.make);
+    STOCK = valid.filter(v => !v.sold);
+    SOLD_STOCK = valid.filter(v => v.sold);
+    console.log('Loaded', STOCK.length, 'for sale,', SOLD_STOCK.length, 'sold from GitHub CMS');
+  } catch(err){
+    console.warn('Could not load stock from GitHub:', err.message);
+    STOCK = []; SOLD_STOCK = [];
   }
-  // Always render after load attempt
-  renderStock(STOCK.slice(0,3),'home-featured-grid','stock');
-  populateMakes();applyFilters();
-  renderStock(SOLD_STOCK,'sold-grid','sold');
-  renderTestis(TESTIMONIALS.slice(0,3),'home-testi');
-  renderTestis(TESTIMONIALS,'all-testimonials');
+  renderStock(STOCK.slice(0,3), 'home-featured-grid', 'stock');
+  populateMakes(); applyFilters();
+  renderStock(SOLD_STOCK, 'sold-grid', 'sold');
+  renderTestis(TESTIMONIALS.slice(0,3), 'home-testi');
+  renderTestis(TESTIMONIALS, 'all-testimonials');
   injectFooter('home');
 }
 
